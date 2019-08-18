@@ -1,13 +1,16 @@
 {
   "name": "taro-cropper",
   "version": "1.0.0",
-  "private": true,
-  "description": "we-cropper在Taro框架下的封装，开箱即用",
+  "private": false,
+  "description": "Taro框架下的图片裁剪组件封装，开箱即用",
+  "main": "dist/index.js",
+  "main:h5": "dist/index.js",
   "templateInfo": {
     "name": "default",
     "typescript": true,
     "css": "sass"
   },
+  "types": "./@types/index.d.ts",
   "scripts": {
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
@@ -24,12 +27,12 @@
     "dev:h5": "npm run build:h5 -- --watch",
     "dev:rn": "npm run build:rn -- --watch",
     "dev:qq": "npm run build:qq -- --watch",
-    "dev:quickapp": "npm run build:quickapp -- --watch"
+    "dev:quickapp": "npm run build:quickapp -- --watch",
+    "build:ui": "TARO_BUILD_TYPE=ui taro build --ui"
   },
-  "author": "",
+  "author": "SunnyQjm",
   "license": "MIT",
   "dependencies": {
-    "we-cropper": "^1.3.7"
   },
   "devDependencies": {
     "@tarojs/components": "1.3.13",
@@ -68,5 +71,10 @@
     "eslint-plugin-taro": "1.3.13",
     "@typescript-eslint/parser": "^1.6.0",
     "typescript": "^3.0.1"
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "@types"
+  ]
 }
