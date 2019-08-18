@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "taro-cropper",
 	"description": "we-cropper在Taro框架下的封装，开箱即用",
-	"appid": "wx47e69a70a727989c",
+	"appid": "touristappid",
 	"setting": {
 		"urlCheck": true,
 		"es6": false,

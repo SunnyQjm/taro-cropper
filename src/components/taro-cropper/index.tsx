@@ -1,5 +1,5 @@
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
-import {Canvas, View} from '@tarojs/components';
+import {Canvas, CoverView} from '@tarojs/components';
 
 import './index.scss';
 import {ITouch, ITouchEvent} from "@tarojs/components/types/common";
@@ -7,15 +7,17 @@ import {CSSProperties} from "react";
 
 
 interface TaroCropperComponentProps {
-  cropperCanvasId: string,  // 裁剪框画布id
-  width: number,            // 组件宽度
-  height: number,           // 组件高度   (要求背景高度大于宽度)
-  cropperWidth: number,     // 裁剪框宽度
-  cropperHeight: number,    // 裁剪框高度
-  themeColor: string,       // 主题色（裁剪框的四个角的绘制颜色）
-  maxScale: number,         // 最大放大倍数，maxScale >= 1
-  fullScreen: boolean,      // 组件充满全屏，此时width和height设置无效
-  src: string,              // 要裁剪的图片路径
+  cropperCanvasId: string,          // 裁剪框画布id
+  width: number,                    // 组件宽度
+  height: number,                   // 组件高度   (要求背景高度大于宽度)
+  cropperWidth: number,             // 裁剪框宽度
+  cropperHeight: number,            // 裁剪框高度
+  themeColor: string,               // 主题色（裁剪框的四个角的绘制颜色）
+  maxScale: number,                 // 最大放大倍数，maxScale >= 1
+  fullScreen: boolean,              // 组件充满全屏，此时width和height设置无效
+  src: string,                      // 要裁剪的图片路径,
+  onCut: (src: string) => void,     // 点击底部的完成按钮，执行裁剪，成功则触发该回调
+  onFail: (err) => void,            // 裁剪失败触发该回调
 }
 
 interface TaroCropperComponentState {
@@ -34,6 +36,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     themeColor: '#0f0',
     maxScale: 3,
     fullScreen: false,
+    onCut: () => {},
+    onFail: () => {}
   };
 
   systemInfo: getSystemInfoSync.Return;
@@ -418,12 +422,13 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       width,
       height,
       cropperCanvasId,
-      fullScreen
+      fullScreen,
+      themeColor
     } = this.props;
     const canvasStyle: CSSProperties = {
       background: 'rgba(0, 0, 0, 0.8)',
     };
-    if(fullScreen) {
+    if (fullScreen) {
       canvasStyle.width = `${this.systemInfo.windowWidth}px`;
       canvasStyle.height = `${this.systemInfo.windowHeight}px`;
     } else {
@@ -431,16 +436,36 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       canvasStyle.height = `${height / 750 * this.systemInfo.windowHeight}px`;
     }
     return (
-      <View className='taro-cropper-component'>
-        <Canvas
-          onTouchStart={this.handleOnTouchStart}
-          onTouchMove={this.handleOnTouchMove}
-          onTouchEnd={this.handleOnTouchEnd}
-          canvasId={cropperCanvasId}
-          style={canvasStyle}
-          disableScroll
-        />
-      </View>
+      <Canvas
+        onTouchStart={this.handleOnTouchStart}
+        onTouchMove={this.handleOnTouchMove}
+        onTouchEnd={this.handleOnTouchEnd}
+        canvasId={cropperCanvasId}
+        style={canvasStyle}
+        disableScroll
+      >
+        <CoverView
+          style={{
+            position: 'absolute',
+            display: 'inline-block',
+            color: themeColor,
+            textAlign: "right",
+            bottom: Taro.pxTransform(30),
+            right: Taro.pxTransform(30),
+          }}
+          onClick={() => {
+            this.cut()
+              .then(res => {
+                this.props.onCut && this.props.onCut(res.tempFilePath);
+              })
+              .catch(err => {
+                this.props.onFail && this.props.onFail(err);
+              })
+          }}
+        >
+          完成
+        </CoverView>
+      </Canvas>
     );
   }
 }

@@ -54,6 +54,11 @@ export default class Index extends Component<IndexProps, IndexState> {
           ref={this.catTaroCropper}
           themeColor={'#f00'}
           fullScreen
+          onCut={res => {
+            this.setState({
+              cutImagePath: res
+            })
+          }}
         />
         <Button onClick={() => {
           Taro.chooseImage()
