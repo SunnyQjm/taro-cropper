@@ -6,7 +6,6 @@ import {ITouch, ITouchEvent} from "@tarojs/components/types/common";
 
 
 interface TaroCropperComponentProps {
-  bgCanvasId: string,       // 背景画布id
   cropperCanvasId: string,  // 裁剪框画布id
   width: number,            // 组件宽度
   height: number,           // 组件高度   (要求背景高度大于宽度)
@@ -26,13 +25,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     height: 1200,
     cropperWidth: 300,
     cropperHeight: 300,
-    bgCanvasId: 'TaroBgCanvasId',
     cropperCanvasId: 'TaroCropperCanvasId',
     src: '',
   };
 
   systemInfo: getSystemInfoSync.Return;
-  bgCanvasContext: CanvasContext;
   cropperCanvasContext: CanvasContext;
 
   constructor(props) {
@@ -108,9 +105,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
   componentDidMount(): void {
     const {
       cropperCanvasId,
-      bgCanvasId
     } = this.props;
-    this.bgCanvasContext = Taro.createCanvasContext(bgCanvasId, this);
     this.cropperCanvasContext = Taro.createCanvasContext(cropperCanvasId, this);
     this.updateInfo(this.props)
       .then(() => {
@@ -366,6 +361,40 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     } else if (e.touches.length >= 2) {// 双指手势触发
       this._twoTouchMove(e.touches[0], e.touches[1]);
     }
+  }
+
+
+  /**
+   * 将当前裁剪框区域的图片导出
+   */
+  cut(): Promise<{
+    errMsg: string,
+    tempFilePath: string,
+  }> {
+    const {
+      cropperCanvasId
+    } = this.props;
+    return new Promise((resolve, reject) => {
+      const cropperStartX = (this.width - this.cropperWidth) / 2;
+      const cropperStartY = (this.height - this.cropperHeight) / 2;
+      Taro.canvasToTempFilePath({
+        canvasId: cropperCanvasId,
+        x: cropperStartX,
+        y: cropperStartY,
+        width: this.cropperWidth,
+        height: this.cropperHeight,
+        destWidth: 2 * this.cropperWidth,
+        destHeight: 2 * this.cropperHeight,
+        success: res => {
+          resolve(res);
+        },
+        fail: err => {
+          reject(err);
+        },
+        complete: () => {
+        }
+      }, this.$scope);
+    });
   }
 
 

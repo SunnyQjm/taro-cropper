@@ -1,5 +1,5 @@
 import Taro, {Component, Config} from '@tarojs/taro'
-import {View, Button} from '@tarojs/components'
+import {View, Button, Image} from '@tarojs/components'
 import './index.scss'
 import TaroCropper from '../../components/taro-cropper';
 
@@ -9,6 +9,7 @@ interface IndexProps {
 
 interface IndexState {
   src: string,
+  cutImagePath: string,
 }
 
 export default class Index extends Component<IndexProps, IndexState> {
@@ -27,32 +28,23 @@ export default class Index extends Component<IndexProps, IndexState> {
   constructor(props) {
     super(props);
     this.state = {
-      src: ''
+      src: '',
+      cutImagePath: '',
     }
   }
 
-  componentWillMount() {
-  }
-
-  componentDidMount() {
-  }
-
-  componentWillUnmount() {
-  }
-
-  componentDidShow() {
-  }
-
-  componentDidHide() {
-  }
+  taroCropper: TaroCropper;
 
   render() {
     const {
-      src
+      src,
+      cutImagePath
     } = this.state;
     return (
       <View className='index'>
-        <TaroCropper height={1000} src={src} cropperWidth={400} cropperHeight={400}/>
+        <TaroCropper height={1000} src={src} cropperWidth={400} cropperHeight={400} ref={(node: TaroCropper) => {
+          this.taroCropper = node;
+        }}/>
         <Button onClick={() => {
           Taro.chooseImage()
             .then(res => {
@@ -61,6 +53,24 @@ export default class Index extends Component<IndexProps, IndexState> {
               });
             })
         }}>选择图片</Button>
+        <Button onClick={() => {
+          this.taroCropper && this.taroCropper.cut()
+            .then(res => {
+              this.setState({
+                cutImagePath: res.tempFilePath
+              });
+              console.log(res);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }}>
+          裁剪
+        </Button>
+        <Image
+          src={cutImagePath}
+          mode='aspectFit'
+        />
       </View>
     )
   }
