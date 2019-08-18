@@ -55,4 +55,3 @@ TaroCropper 是Taro小程序框架下使用的图片裁剪，基于canvasAPI进�
 > ### 效果展示
 
 <img src="https://raw.githubusercontent.com/SunnyQjm/taro-cropper/master/document/demo1.png" width="375"/>
-<img src="https://raw.githubusercontent.com/SunnyQjm/taro-cropper/master/document/demo2.jpg" width="375"/>
