@@ -1,8 +1,17 @@
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import Taro, {Component, Config} from '@tarojs/taro'
+import {View, Button} from '@tarojs/components'
 import './index.scss'
+import TaroCropper from '../../components/taro-cropper';
 
-export default class Index extends Component {
+interface IndexProps {
+
+}
+
+interface IndexState {
+  src: string,
+}
+
+export default class Index extends Component<IndexProps, IndexState> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -12,23 +21,46 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '首页',
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      src: ''
+    }
   }
 
-  componentWillMount () { }
+  componentWillMount() {
+  }
 
-  componentDidMount () { }
+  componentDidMount() {
+  }
 
-  componentWillUnmount () { }
+  componentWillUnmount() {
+  }
 
-  componentDidShow () { }
+  componentDidShow() {
+  }
 
-  componentDidHide () { }
+  componentDidHide() {
+  }
 
-  render () {
+  render() {
+    const {
+      src
+    } = this.state;
     return (
       <View className='index'>
-        <Text>Hello world!</Text>
+        <TaroCropper height={1000} src={src} cropperWidth={400} cropperHeight={400}/>
+        <Button onClick={() => {
+          Taro.chooseImage()
+            .then(res => {
+              this.setState({
+                src: res.tempFilePaths[0]
+              });
+            })
+        }}>选择图片</Button>
       </View>
     )
   }
