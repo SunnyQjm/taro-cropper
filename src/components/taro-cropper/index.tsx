@@ -18,6 +18,7 @@ interface TaroCropperComponentProps {
   src: string,                      // 要裁剪的图片路径,
   onCut: (src: string) => void,     // 点击底部的完成按钮，执行裁剪，成功则触发该回调
   onFail: (err) => void,            // 裁剪失败触发该回调
+  hideFinishText: boolean,          // 隐藏完成按钮（可以自己实现，然后调用本实例的cut方法进行裁剪）
 }
 
 interface TaroCropperComponentState {
@@ -36,8 +37,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     themeColor: '#0f0',
     maxScale: 3,
     fullScreen: false,
-    onCut: () => {},
-    onFail: () => {}
+    hideFinishText: false,
+    onCut: () => {
+    },
+    onFail: () => {
+    },
   };
 
   systemInfo: getSystemInfoSync.Return;
@@ -423,7 +427,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       height,
       cropperCanvasId,
       fullScreen,
-      themeColor
+      themeColor,
+      hideFinishText
     } = this.props;
     const canvasStyle: CSSProperties = {
       background: 'rgba(0, 0, 0, 0.8)',
@@ -445,27 +450,30 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         style={canvasStyle}
         disableScroll
       >
-        <CoverView
-          style={{
-            position: 'absolute',
-            display: 'inline-block',
-            color: themeColor,
-            textAlign: "right",
-            bottom: Taro.pxTransform(30),
-            right: Taro.pxTransform(30),
-          }}
-          onClick={() => {
-            this.cut()
-              .then(res => {
-                this.props.onCut && this.props.onCut(res.tempFilePath);
-              })
-              .catch(err => {
-                this.props.onFail && this.props.onFail(err);
-              })
-          }}
-        >
-          完成
-        </CoverView>
+        {
+          !hideFinishText &&
+          <CoverView
+            style={{
+              position: 'absolute',
+              display: 'inline-block',
+              color: themeColor,
+              textAlign: "right",
+              bottom: Taro.pxTransform(30),
+              right: Taro.pxTransform(30),
+            }}
+            onClick={() => {
+              this.cut()
+                .then(res => {
+                  this.props.onCut && this.props.onCut(res.tempFilePath);
+                })
+                .catch(err => {
+                  this.props.onFail && this.props.onFail(err);
+                })
+            }}
+          >
+            完成
+          </CoverView>
+        }
       </Canvas>
     );
   }
