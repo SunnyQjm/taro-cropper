@@ -27,6 +27,7 @@ export default class Index extends Component<IndexProps, IndexState> {
 
   constructor(props) {
     super(props);
+    this.catTaroCropper = this.catTaroCropper.bind(this);
     this.state = {
       src: '',
       cutImagePath: '',
@@ -35,6 +36,10 @@ export default class Index extends Component<IndexProps, IndexState> {
 
   taroCropper: TaroCropper;
 
+  catTaroCropper(node: TaroCropper) {
+    this.taroCropper = node;
+  }
+
   render() {
     const {
       src,
@@ -42,9 +47,14 @@ export default class Index extends Component<IndexProps, IndexState> {
     } = this.state;
     return (
       <View className='index'>
-        <TaroCropper height={1000} src={src} cropperWidth={400} cropperHeight={400} ref={(node: TaroCropper) => {
-          this.taroCropper = node;
-        }}/>
+        <TaroCropper
+          height={1000} src={src}
+          cropperWidth={400}
+          cropperHeight={400}
+          ref={this.catTaroCropper}
+          themeColor={'#f00'}
+          fullScreen
+        />
         <Button onClick={() => {
           Taro.chooseImage()
             .then(res => {

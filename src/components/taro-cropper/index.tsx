@@ -3,6 +3,7 @@ import {Canvas, View} from '@tarojs/components';
 
 import './index.scss';
 import {ITouch, ITouchEvent} from "@tarojs/components/types/common";
+import {CSSProperties} from "react";
 
 
 interface TaroCropperComponentProps {
@@ -11,7 +12,10 @@ interface TaroCropperComponentProps {
   height: number,           // 组件高度   (要求背景高度大于宽度)
   cropperWidth: number,     // 裁剪框宽度
   cropperHeight: number,    // 裁剪框高度
-  src: string,
+  themeColor: string,       // 主题色（裁剪框的四个角的绘制颜色）
+  maxScale: number,         // 最大放大倍数，maxScale >= 1
+  fullScreen: boolean,      // 组件充满全屏，此时width和height设置无效
+  src: string,              // 要裁剪的图片路径
 }
 
 interface TaroCropperComponentState {
@@ -23,10 +27,13 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
   static defaultProps = {
     width: 750,
     height: 1200,
-    cropperWidth: 300,
-    cropperHeight: 300,
+    cropperWidth: 400,
+    cropperHeight: 400,
     cropperCanvasId: 'TaroCropperCanvasId',
     src: '',
+    themeColor: '#0f0',
+    maxScale: 3,
+    fullScreen: false,
   };
 
   systemInfo: getSystemInfoSync.Return;
@@ -69,10 +76,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       height,
       cropperWidth,
       cropperHeight,
-      src
+      src,
+      fullScreen
     } = props;
-    this.width = this._getRealPx(width);
-    this.height = this._getRealPx(height);
+    this.width = fullScreen ? this.systemInfo.windowWidth : this._getRealPx(width);
+    this.height = fullScreen ? this.systemInfo.windowHeight : this._getRealPx(height);
     this.cropperWidth = this._getRealPx(cropperWidth);
     this.cropperHeight = this._getRealPx(cropperHeight);
     if (!src)
@@ -130,13 +138,16 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
    * @private
    */
   _drawCropperCorner() {
+    const {
+      themeColor
+    } = this.props;
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
 
     const lineWidth = 2;
     const lineLength = 10;
     this.cropperCanvasContext.beginPath();
-    this.cropperCanvasContext.setStrokeStyle('#0f0');
+    this.cropperCanvasContext.setStrokeStyle(themeColor);
     this.cropperCanvasContext.setLineWidth(lineWidth);
     // 左上角
     this.cropperCanvasContext.moveTo(cropperStartX, cropperStartY);
@@ -304,13 +315,17 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
   }
 
   _twoTouchMove(touch0: ITouch, touch1: ITouch) {
+    const {
+      maxScale
+    } = this.props;
+    const realMaxScale = maxScale >= 1 ? maxScale : 1;
     const oldScale = this.oldScale;
     const oldDistance = this.oldDistance;
     this.newScale = this._getNewScale(oldScale, oldDistance, touch0, touch1);
 
     // 限制缩放
     this.newScale <= 1 && (this.newScale = 1);
-    this.newScale > 3 && (this.newScale = 3);
+    this.newScale > realMaxScale && (this.newScale = realMaxScale);
 
     this.scaleImageWidth = this.realImageWidth * this.newScale;
     this.scaleImageHeight = this.realImageHeight * this.newScale;
@@ -403,7 +418,18 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       width,
       height,
       cropperCanvasId,
+      fullScreen
     } = this.props;
+    const canvasStyle: CSSProperties = {
+      background: 'rgba(0, 0, 0, 0.8)',
+    };
+    if(fullScreen) {
+      canvasStyle.width = `${this.systemInfo.windowWidth}px`;
+      canvasStyle.height = `${this.systemInfo.windowHeight}px`;
+    } else {
+      canvasStyle.width = `${width / 750 * this.systemInfo.windowWidth}px`;
+      canvasStyle.height = `${height / 750 * this.systemInfo.windowHeight}px`;
+    }
     return (
       <View className='taro-cropper-component'>
         <Canvas
@@ -411,11 +437,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
           onTouchMove={this.handleOnTouchMove}
           onTouchEnd={this.handleOnTouchEnd}
           canvasId={cropperCanvasId}
-          style={{
-            width: `${width / 750 * this.systemInfo.screenWidth}px`,
-            height: `${height / 750 * this.systemInfo.screenWidth}px`,
-            background: 'rgba(0, 0, 0, 0.8)',
-          }}
+          style={canvasStyle}
           disableScroll
         />
       </View>
