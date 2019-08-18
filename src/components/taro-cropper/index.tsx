@@ -427,13 +427,14 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     } = this.props;
     const canvasStyle: CSSProperties = {
       background: 'rgba(0, 0, 0, 0.8)',
+      position: 'relative'
     };
     if (fullScreen) {
       canvasStyle.width = `${this.systemInfo.windowWidth}px`;
       canvasStyle.height = `${this.systemInfo.windowHeight}px`;
     } else {
       canvasStyle.width = `${width / 750 * this.systemInfo.windowWidth}px`;
-      canvasStyle.height = `${height / 750 * this.systemInfo.windowHeight}px`;
+      canvasStyle.height = `${height / 750 * this.systemInfo.windowWidth}px`;
     }
     return (
       <Canvas

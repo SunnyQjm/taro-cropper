@@ -53,7 +53,7 @@ export default class Index extends Component<IndexProps, IndexState> {
           cropperHeight={400}
           ref={this.catTaroCropper}
           themeColor={'#f00'}
-          fullScreen
+          // fullScreen
           onCut={res => {
             this.setState({
               cutImagePath: res
