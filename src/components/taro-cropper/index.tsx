@@ -149,11 +149,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     const {
       themeColor
     } = this.props;
-    const cropperStartX = (this.width - this.cropperWidth) / 2;
-    const cropperStartY = (this.height - this.cropperHeight) / 2;
 
     const lineWidth = 2;
     const lineLength = 10;
+    const cropperStartX = (this.width - this.cropperWidth) / 2;
+    const cropperStartY = (this.height - this.cropperHeight) / 2;
     this.cropperCanvasContext.beginPath();
     this.cropperCanvasContext.setStrokeStyle(themeColor);
     this.cropperCanvasContext.setLineWidth(lineWidth);
@@ -203,6 +203,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     imageHeight: number,
     drawWidth: number,
     drawHeight: number) {
+    this._drawCropperCorner();
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
 
@@ -213,7 +214,6 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     // 绘制裁剪框内裁剪的图片
     this.cropperCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight,
       cropperStartX, cropperStartY, this.cropperWidth, this.cropperHeight);
-    this._drawCropperCorner();
   }
 
   update() {
@@ -398,14 +398,14 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cropperCanvasId
     } = this.props;
     return new Promise((resolve, reject) => {
-      const cropperStartX = (this.width - this.cropperWidth) / 2;
-      const cropperStartY = (this.height - this.cropperHeight) / 2;
+      const cropperStartX = (this.width - this.cropperWidth) / 2 + 1;
+      const cropperStartY = (this.height - this.cropperHeight) / 2 + 1;
       Taro.canvasToTempFilePath({
         canvasId: cropperCanvasId,
         x: cropperStartX,
         y: cropperStartY,
-        width: this.cropperWidth,
-        height: this.cropperHeight,
+        width: this.cropperWidth - 2,
+        height: this.cropperHeight - 2,
         destWidth: 2 * this.cropperWidth,
         destHeight: 2 * this.cropperHeight,
         success: res => {
