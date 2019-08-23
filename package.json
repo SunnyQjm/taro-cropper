@@ -1,6 +1,6 @@
 {
 	"name": "taro-cropper",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"private": false,
 	"description": "Taro框架下的图片裁剪组件封装，开箱即用",
 	"main": "dist/index.js",
