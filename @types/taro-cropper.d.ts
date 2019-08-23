@@ -1,7 +1,8 @@
 import {ComponentClass} from "react";
 
 export interface TaroCropperComponentProps {
-  cropperCanvasId?: string,          // 裁剪框画布id
+  cropperCanvasId?: string,          // 画布id
+  cropperCutCanvasId?: string,        // 用于裁剪的canvas id
   width?: number,                    // 组件宽度
   height?: number,                   // 组件高度   (要求背景高度大于宽度)
   cropperWidth?: number,             // 裁剪框宽度
