@@ -61,8 +61,12 @@ export default class Index extends Component<IndexProps, IndexState> {
         }}
       />
         <Button onClick={() => {
-          Taro.chooseImage()
+          Taro.chooseImage({
+            count: 1
+          })
             .then(res => {
+              console.log(res);
+              // console.log(res);
               this.setState({
                 src: res.tempFilePaths[0]
               });
@@ -84,7 +88,7 @@ export default class Index extends Component<IndexProps, IndexState> {
         </Button>
         <Image
           src={cutImagePath}
-          mode='aspectFit'
+          mode='widthFix'
         />
       </View>
     )
