@@ -48,18 +48,19 @@ export default class Index extends Component<IndexProps, IndexState> {
     return (
       <View className='index'>
         <TaroCropper
-        height={1000} src={src}
-        cropperWidth={400}
-        cropperHeight={400}
-        ref={this.catTaroCropper}
-        // themeColor={'#f00'}
-        fullScreen
-        onCut={res => {
-          this.setState({
-            cutImagePath: res
-          })
-        }}
-      />
+          height={1000} src={src}
+          cropperWidth={400}
+          cropperHeight={400}
+          ref={this.catTaroCropper}
+          // themeColor={'#f00'}
+          // hideFinishText
+          fullScreen
+          onCut={res => {
+            this.setState({
+              cutImagePath: res
+            })
+          }}
+        />
         <Button onClick={() => {
           Taro.chooseImage({
             count: 1

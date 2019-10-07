@@ -534,12 +534,12 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
           disableScroll
         >
           {
-            isWeapp &&
+            isWeapp && !hideFinishText &&
             finish
           }
         </Canvas>
         {
-          !isWeapp &&
+          !isWeapp && !hideFinishText &&
           finish
         }
       </View>
