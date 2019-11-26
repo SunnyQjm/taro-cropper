@@ -283,7 +283,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
   /**
    * 图片移动边界检测
    * @param imageLeft
-   * @param imageRight
+   * @param imageTop
    * @private
    */
   _outsideBound(imageLeft: number, imageTop: number) {
@@ -426,7 +426,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cropperCutCanvasId
     } = this.props;
     return new Promise((resolve, reject) => {
-      const scope = process.env.TARO_ENV === 'weapp' ? this.$scope : this;
+      const scope = process.env.TARO_ENV === 'weapp' || process.env.TARO_ENV === 'qq' ? this.$scope : this;
       Taro.canvasToTempFilePath({
         canvasId: cropperCutCanvasId,
         x: 0,
