@@ -426,7 +426,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cropperCutCanvasId
     } = this.props;
     return new Promise((resolve, reject) => {
-      const scope = process.env.TARO_ENV === 'weapp' || process.env.TARO_ENV === 'qq' ? this.$scope : this;
+      const scope = process.env.TARO_ENV === 'h5' ? this : this.$scope;
       Taro.canvasToTempFilePath({
         canvasId: cropperCutCanvasId,
         x: 0,
