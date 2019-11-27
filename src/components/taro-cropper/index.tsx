@@ -237,7 +237,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       cropperStartX, cropperStartY, this.cropperWidth, this.cropperHeight);
     // @ts-ignore
     this.cropperCutCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight,
-        0, 0, this.cropperWidth, this.cropperHeight);
+      0, 0, this.cropperWidth, this.cropperHeight);
   }
 
   update() {
@@ -420,7 +420,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
    */
   cut(): Promise<{
     errMsg: string,
-    tempFilePath: string,
+    filePath: string,
   }> {
     const {
       cropperCutCanvasId
@@ -436,6 +436,24 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         destWidth: 2 * this.cropperWidth,
         destHeight: 2 * this.cropperHeight,
         success: res => {
+          switch (process.env.TARO_ENV) {
+            case 'alipay':
+              resolve({
+                errMsg: res.errMsg,
+                filePath: res.apFilePath
+              });
+              break;
+            case 'weapp':
+            case 'qq':
+            case 'h5':
+            default:
+              resolve({
+                errMsg: res.errMsg,
+                filePath: res.tempFilePath
+              });
+              break;
+
+          }
           resolve(res);
         },
         fail: err => {
@@ -495,7 +513,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       const onFinishClick = () => {
         this.cut()
           .then(res => {
-            this.props.onCut && this.props.onCut(res.tempFilePath);
+            this.props.onCut && this.props.onCut(res.filePath);
           })
           .catch(err => {
             this.props.onFail && this.props.onFail(err);

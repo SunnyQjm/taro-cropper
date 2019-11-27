@@ -77,7 +77,7 @@ export default class Index extends Component<IndexProps, IndexState> {
           this.taroCropper && this.taroCropper.cut()
             .then(res => {
               this.setState({
-                cutImagePath: res.tempFilePath
+                cutImagePath: res.filePath
               });
               console.log(res);
             })
