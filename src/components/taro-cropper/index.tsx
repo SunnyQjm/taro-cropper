@@ -249,6 +249,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
 
     const src = process.env.TARO_ENV === 'h5' ? this.image : this.imageInfo.path;
 
+
     // @ts-ignore
     this.cropperCanvasContext.drawImage(src, 0, 0, this.imageInfo.width, this.imageInfo.height,
       this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);

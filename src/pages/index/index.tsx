@@ -66,7 +66,6 @@ export default class Index extends Component<IndexProps, IndexState> {
             count: 1
           })
             .then(res => {
-              console.log(res);
               // console.log(res);
               this.setState({
                 src: res.tempFilePaths[0]
