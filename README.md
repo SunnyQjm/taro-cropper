@@ -67,7 +67,6 @@ TaroCropper 是Taro小程序框架下使用的图片裁剪，基于canvasAPI进�
 |       onCut        | (cutImagePath: string) => void | 点击底部完成按钮时会执行裁剪操作，可以通过此回调接收裁剪结果 | () => {}              |
 |       onFail       |         (err) => void          |                        裁剪失败的回调                        | () => {}              |
 
-
 > ### 效果展示
 
 <img src="https://raw.githubusercontent.com/SunnyQjm/taro-cropper/master/document/demo1.png" width="375"/>
