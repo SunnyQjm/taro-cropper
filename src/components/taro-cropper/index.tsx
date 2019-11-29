@@ -19,8 +19,12 @@ interface TaroCropperComponentProps {
   fullScreen: boolean,              // 组件充满全屏，此时width和height设置无效
   src: string,                      // 要裁剪的图片路径,
   onCut: (src: string) => void,     // 点击底部的完成按钮，执行裁剪，成功则触发该回调
+  onCancel: () => void,             // 点击取消按钮回调
   onFail: (err) => void,            // 裁剪失败触发该回调
   hideFinishText: boolean,          // 隐藏完成按钮（可以自己实现，然后调用本实例的cut方法进行裁剪）
+  hideCancelText: boolean,          // 隐藏取消按钮（默认为true）
+  finishText: string,               // 完成按钮文字，默认为 '完成'
+  cancelText: string,               // 取消按钮文字，默认为 '取消'
 }
 
 interface TaroCropperComponentState {
@@ -41,6 +45,10 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     maxScale: 3,
     fullScreen: false,
     hideFinishText: false,
+    hideCancelText: true,
+    finishText: '完成',
+    cancelText: '取消',
+    onCancel: () => {},
     onCut: () => {
     },
     onFail: () => {
@@ -426,6 +434,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     const {
       cropperCutCanvasId
     } = this.props;
+    console.log(this.systemInfo.pixelRatio);
     return new Promise((resolve, reject) => {
       const scope = process.env.TARO_ENV === 'h5' ? this : this.$scope;
       Taro.canvasToTempFilePath({
@@ -434,8 +443,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         y: 0,
         width: this.cropperWidth - 2,
         height: this.cropperHeight - 2,
-        destWidth: 2 * this.cropperWidth,
-        destHeight: 2 * this.cropperHeight,
+        destWidth: this.cropperWidth * this.systemInfo.pixelRatio,
+        destHeight: this.cropperHeight * this.systemInfo.pixelRatio,
         success: res => {
           switch (process.env.TARO_ENV) {
             case 'alipay':
@@ -477,7 +486,11 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       hideFinishText,
       cropperWidth,
       cropperHeight,
-      cropperCutCanvasId
+      cropperCutCanvasId,
+      hideCancelText,
+      onCancel,
+      finishText,
+      cancelText
     } = this.props;
 
     const _width = fullScreen ? this.systemInfo.windowWidth : this._getRealPx(width);
@@ -500,7 +513,9 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     };
 
     let finish: any = null;
-    const isWeapp = process.env.TARO_ENV === 'weapp';
+    let cancel: any = null;
+    // const isH5 = process.env.TARO_ENV === 'h5';
+
     if (!hideFinishText) {
       const finishStyle: CSSProperties = {
         position: 'absolute',
@@ -520,21 +535,39 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
             this.props.onFail && this.props.onFail(err);
           })
       };
-      if (isWeapp) {
-        finish = <CoverView
-          style={finishStyle}
-          onClick={onFinishClick}
-        >
-          完成
-        </CoverView>
-      } else {
-        finish = <View
-          style={finishStyle}
-          onClick={onFinishClick}
-        >
-          完成
-        </View>
-      }
+      // if (!isH5) {
+      finish = <CoverView
+        style={finishStyle}
+        onClick={onFinishClick}
+      >
+        {finishText}
+      </CoverView>
+      // } else {
+      //   finish = <View
+      //     style={finishStyle}
+      //     onClick={onFinishClick}
+      //   >
+      //     完成
+      //   </View>
+      // }
+    }
+
+    if(!hideCancelText) {
+      const cancelStyle: CSSProperties = {
+        position: 'absolute',
+        display: 'inline-block',
+        color: themeColor,
+        textAlign: "left",
+        fontSize: Taro.pxTransform(32),
+        bottom: Taro.pxTransform(30),
+        left: Taro.pxTransform(30),
+      };
+      cancel = <CoverView
+        style={cancelStyle}
+        onClick={onCancel}
+      >
+        {cancelText}
+      </CoverView>
     }
     return (
       <View style={{
@@ -543,6 +576,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         <Canvas
           canvasId={cropperCutCanvasId}
           style={cutCanvasStyle}
+
         />
         <Canvas
           onTouchStart={this.handleOnTouchStart}
@@ -552,14 +586,14 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
           style={canvasStyle}
           disableScroll
         >
-          {
-            isWeapp && !hideFinishText &&
-            finish
-          }
         </Canvas>
         {
-          !isWeapp && !hideFinishText &&
+          !hideFinishText &&
           finish
+        }
+        {
+          !hideCancelText &&
+            cancel
         }
       </View>
 

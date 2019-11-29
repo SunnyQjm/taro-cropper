@@ -60,6 +60,13 @@ export default class Index extends Component<IndexProps, IndexState> {
               cutImagePath: res
             })
           }}
+          hideCancelText={false}
+          onCancel={() => {
+            Taro.showToast({
+              icon: 'none',
+              title: '点击取消'
+            })
+          }}
         />
         <Button onClick={() => {
           Taro.chooseImage({
@@ -89,6 +96,10 @@ export default class Index extends Component<IndexProps, IndexState> {
         <Image
           src={cutImagePath}
           mode='widthFix'
+          style={{
+            width: Taro.pxTransform(400),
+            height: Taro.pxTransform(400)
+          }}
         />
       </View>
     )
