@@ -12,8 +12,12 @@ export interface TaroCropperComponentProps {
   fullScreen?: boolean,              // 组件充满全屏，此时width和height设置无效
   src: string,                      // 要裁剪的图片路径,
   hideFinishText?: boolean,          // 隐藏完成按钮（可以自己实现，然后调用本实例的cut方法进行裁剪）
+  onCancel?: () => void,             // 点击取消按钮回调
   onCut?: (src: string) => void,     // 点击底部的完成按钮，执行裁剪，成功则触发该回调
   onFail?: (err) => void,            // 裁剪失败触发该回调
+  hideCancelText?: boolean,          // 隐藏取消按钮（默认为true）
+  finishText?: string,               // 完成按钮文字，默认为 '完成'
+  cancelText?: string,               // 取消按钮文字，默认为 '取消'
 }
 
 declare const TaroCropper: ComponentClass<TaroCropperComponentProps>;
