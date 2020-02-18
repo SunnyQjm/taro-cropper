@@ -1,10 +1,10 @@
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
 import {Canvas, CoverView, View} from '@tarojs/components';
-
 import './index.scss';
 // @ts-ignore
 import {CanvasTouch, CanvasTouchEvent} from "@tarojs/components/types/common";
 import {CSSProperties} from "react";
+import {easySetFillStyle, easySetLineWidth, easySetStrokeStyle} from "./canvas-util";
 
 
 interface TaroCropperComponentProps {
@@ -148,7 +148,6 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
 
   }
 
-
   componentDidMount(): void {
     const {
       cropperCanvasId,
@@ -188,8 +187,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
     this.cropperCanvasContext.beginPath();
-    this.cropperCanvasContext.setStrokeStyle(themeColor);
-    this.cropperCanvasContext.setLineWidth(lineWidth);
+    easySetStrokeStyle(this.systemInfo, this.cropperCanvasContext, themeColor);
+    easySetLineWidth(this.systemInfo, this.cropperCanvasContext, lineWidth);
     // 左上角
     this.cropperCanvasContext.moveTo(cropperStartX, cropperStartY);
     this.cropperCanvasContext.lineTo(cropperStartX + lineLength, cropperStartY);
@@ -268,7 +267,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);
     // 绘制半透明层
     this.cropperCanvasContext.beginPath();
-    this.cropperCanvasContext.setFillStyle('rgba(0, 0, 0, 0.3)');
+    easySetFillStyle(this.systemInfo, this.cropperCanvasContext, 'rgba(0, 0, 0, 0.3)');
     this.cropperCanvasContext.fillRect(0, 0, this.width, this.height);
     this.cropperCanvasContext.fill();
 
