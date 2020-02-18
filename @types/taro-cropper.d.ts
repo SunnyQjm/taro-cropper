@@ -18,6 +18,8 @@ export interface TaroCropperComponentProps {
   hideCancelText?: boolean,          // 隐藏取消按钮（默认为true）
   finishText?: string,               // 完成按钮文字，默认为 '完成'
   cancelText?: string,               // 取消按钮文字，默认为 '取消'
+  fileType?: 'jpg' | 'png' | string, // 裁剪后导出的图片的格式，只支持 'jpg' 或 'png'。默认为 'jpg'
+  quality?: number,                  // 导出图片的质量，取值为 0 ~ 1，默认为1
 }
 
 declare const TaroCropper: ComponentClass<TaroCropperComponentProps>;

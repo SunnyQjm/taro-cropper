@@ -25,6 +25,8 @@ interface TaroCropperComponentProps {
   hideCancelText: boolean,          // 隐藏取消按钮（默认为true）
   finishText: string,               // 完成按钮文字，默认为 '完成'
   cancelText: string,               // 取消按钮文字，默认为 '取消'
+  fileType: 'jpg' | 'png' | string, // 裁剪后导出的图片的格式，只支持 'jpg' 或 'png'。默认为 'jpg'
+  quality: number,                  // 导出图片的质量，取值为 0 ~ 1，默认为1
 }
 
 interface TaroCropperComponentState {
@@ -48,7 +50,10 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     hideCancelText: true,
     finishText: '完成',
     cancelText: '取消',
-    onCancel: () => {},
+    fileType: 'jpg',
+    quality: 1,
+    onCancel: () => {
+    },
     onCut: () => {
     },
     onFail: () => {
@@ -432,9 +437,10 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
     filePath: string,
   }> {
     const {
-      cropperCutCanvasId
+      cropperCutCanvasId,
+      fileType,
+      quality
     } = this.props;
-    console.log(this.systemInfo.pixelRatio);
     return new Promise((resolve, reject) => {
       const scope = process.env.TARO_ENV === 'h5' ? this : this.$scope;
       Taro.canvasToTempFilePath({
@@ -445,6 +451,8 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         height: this.cropperHeight - 2,
         destWidth: this.cropperWidth * this.systemInfo.pixelRatio,
         destHeight: this.cropperHeight * this.systemInfo.pixelRatio,
+        fileType: fileType,
+        quality: quality,
         success: res => {
           switch (process.env.TARO_ENV) {
             case 'alipay':
@@ -552,7 +560,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
       // }
     }
 
-    if(!hideCancelText) {
+    if (!hideCancelText) {
       const cancelStyle: CSSProperties = {
         position: 'absolute',
         display: 'inline-block',
@@ -593,7 +601,7 @@ class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps,
         }
         {
           !hideCancelText &&
-            cancel
+          cancel
         }
       </View>
 
