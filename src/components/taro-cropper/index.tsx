@@ -1,3 +1,4 @@
+import React, { PureComponent } from 'react';
 import Taro, {CanvasContext, getImageInfo, getSystemInfoSync} from '@tarojs/taro';
 import {Canvas, CoverView, View} from '@tarojs/components';
 import './index.scss';
@@ -33,7 +34,7 @@ interface TaroCropperComponentState {
   scale: number,
 }
 
-class TaroCropperComponent extends Taro.PureComponent<TaroCropperComponentProps, TaroCropperComponentState> {
+class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, TaroCropperComponentState> {
 
   static defaultProps = {
     width: 750,
