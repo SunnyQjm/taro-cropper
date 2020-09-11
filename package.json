@@ -1,6 +1,6 @@
 {
   "name": "taro-cropper",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "private": false,
   "description": "Taro框架下的图片裁剪组件封装，开箱即用",
   "browser": "dist/index.umd.js",
@@ -19,6 +19,9 @@
     "types",
     "README.md"
   ],
+  "publishConfig": {
+    "tag": "react"
+  },
   "scripts": {
     "dev": "yarn run dev:lib",
     "dev:lib": "tsc --project ./tsconfig.build.json --watch --incremental",
@@ -35,7 +38,7 @@
     "clean": "rimraf .temp dist lib coverage"
   },
   "keywords": [
-    "taro"
+    "taro", "cropper", "taro-cropper"
   ],
   "author": "SunnyQjm",
   "license": "MIT",

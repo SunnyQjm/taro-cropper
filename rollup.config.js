@@ -34,7 +34,7 @@ export default {
     {
       file: resolveFile(Package.browser),
       format: 'umd',
-      name: 'taro-ui',
+      name: 'taro-cropper',
       sourcemap: true,
       globals: {
         react: 'React',
@@ -62,6 +62,10 @@ export default {
         {
           src: resolveFile('src/styles'),
           dest: resolveFile('dist')
+        },
+        {
+          src: resolveFile('docs/README.md'),
+          dest: resolveFile('.')
         }
       ]
     })
