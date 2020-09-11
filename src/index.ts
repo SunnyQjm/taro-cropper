@@ -1,1 +1,3 @@
-export {default as TaroCropper} from './components/taro-cropper';
+import TaroCropper from './components/taro-cropper';
+
+export default TaroCropper;

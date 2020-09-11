@@ -14,16 +14,15 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "target": "es2017",
-    "module": "commonjs",
-    "baseUrl": "./",
-    "typeRoots": [
-      "node_modules/@types",
-      "types"
-    ]
+    "module": "es6",
+    "outDir": "./lib"
   },
   "compileOnSave": false,
   "exclude": [
     "node_modules/*",
     "dist/*"
+  ],
+  "include": [
+    "src/**/*"
   ]
 }

@@ -1,7 +1,6 @@
-dist/
-deploy_versions/
-.temp/
-.rn_temp/
 node_modules/
+yarn-error.log
+dist/
+lib/
+types/
 .DS_Store
-yarn.lock
