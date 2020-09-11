@@ -8,6 +8,24 @@
 
 TaroCropper 是Taro小程序框架下使用的图片裁剪，基于canvasAPI进行实现，支持滑动和缩放，目前测试在微信小程序端, QQ小程序端, 支付宝小程序端, 字节跳动小程序端, 百度小程序端和H5端可以正常使用。
 
+> ### 关于Taro不同版本安装
+
+- taro v1.x 和 taro v2.x
+
+  如果使用Taro1和2进行开发，库的使用和之前一样，直接安装即可，基本支持微信小程序端, QQ小程序端, 支付宝小程序端, 字节跳动小程序端, 百度小程序端和H5端。
+
+  ```bash
+  npm install --save taro-cropper
+  ```
+
+- taro v3.x `React`
+
+  如果使用Taro3进行开发，且使用的React进行开发，则可以选择安装下述包。目前在微信小程序端测试成功，H5端因为taro实现的一些问题，暂时还有问题。
+
+  ```bash
+  npm install --save taro-cropper@react
+  ```
+
 > ### 使用方式
 
 - **首先用npm安装**
