@@ -253,12 +253,17 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     const cropperImageWidth = this.cropperWidth / drawWidth * imageWidth;
     const cropperImageHeight = this.cropperHeight / drawHeight * imageHeight;
     // 绘制裁剪框内裁剪的图片
-    // @ts-ignore
-    this.cropperCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight,
-      cropperStartX, cropperStartY, this.cropperWidth, this.cropperHeight);
-    // @ts-ignore
-    this.cropperCutCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight,
-      0, 0, this.cropperWidth, this.cropperHeight);
+    if (process.env.TARO_ENV == 'swan') {
+      // @ts-ignore
+      this.cropperCanvasContext.drawImage(src, cropperStartX, cropperStartY, this.cropperWidth, this.cropperHeight, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight);
+      // @ts-ignore
+      this.cropperCutCanvasContext.drawImage(src, 0, 0, this.cropperWidth, this.cropperHeight, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight);
+    }else{
+      // @ts-ignore
+      this.cropperCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight, cropperStartX, cropperStartY, this.cropperWidth, this.cropperHeight);
+      // @ts-ignore
+      this.cropperCutCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight, 0, 0, this.cropperWidth, this.cropperHeight);
+    }
   }
 
   update() {
@@ -270,9 +275,13 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
 
     const src = process.env.TARO_ENV === 'h5' ? this.image : this.imageInfo.path;
 
-    // @ts-ignore
-    this.cropperCanvasContext.drawImage(src, 0, 0, this.imageInfo.width, this.imageInfo.height,
-      this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);
+    if (process.env.TARO_ENV == 'swan') {
+      // @ts-ignore
+      this.cropperCanvasContext.drawImage(src, this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight, 0, 0, this.imageInfo.width, this.imageInfo.height);
+    }else{
+      // @ts-ignore
+      this.cropperCanvasContext.drawImage(src, 0, 0, this.imageInfo.width, this.imageInfo.height, this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);
+    }
     // 绘制半透明层
     this.cropperCanvasContext.beginPath();
     easySetFillStyle(this.systemInfo, this.cropperCanvasContext, 'rgba(0, 0, 0, 0.3)');
