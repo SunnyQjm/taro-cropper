@@ -4,6 +4,9 @@ import {BaseEventOrig, Canvas, CoverView, View} from '@tarojs/components';
 import {easySetFillStyle, easySetLineWidth, easySetStrokeStyle} from "./canvas-util";
 
 interface TaroCropperComponentProps {
+  type?: 'circle' | 'rect',         // 遮罩形状（与实际裁剪无关，例：正圆遮罩实际裁剪出的图片是正方形）
+  maskColor?:string,                // 遮罩颜色
+  isSideLine?:boolean,              // 是否显示边框    
   cropperCanvasId: string,          // 画布id
   cropperCutCanvasId: string,       // 用于裁剪的canvas id
   width: number,                    // 组件宽度
@@ -29,11 +32,20 @@ interface TaroCropperComponentProps {
 interface TaroCropperComponentState {
   scale: number,
 }
-
+type Inside<T> = T extends (...args)=>Promise<infer U> ? U : T;
+type getImageInfoType = {
+  SuccessCallbackResult:Inside<typeof getImageInfo>
+}
+type getSystemInfoSyncType = {
+  Result:ReturnType<typeof getSystemInfoSync>
+}
 
 class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, TaroCropperComponentState> {
 
   static defaultProps = {
+    type:'rect',
+    maskColor:'rgba(0,0,0,.6)',
+    isSideLine:false,
     width: 750,
     height: 1200,
     cropperWidth: 400,
@@ -59,7 +71,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     },
   };
 
-  systemInfo: getSystemInfoSync.Result;
+  systemInfo: getSystemInfoSyncType['Result'];
 
   constructor(props) {
     super(props);
@@ -85,7 +97,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
   height: number = 0;
   cropperWidth: number = 0;
   cropperHeight: number = 0;
-  imageInfo: getImageInfo.SuccessCallbackResult;
+  imageInfo: getImageInfoType['SuccessCallbackResult'];
   realImageWidth: number = 0;
   realImageHeight: number = 0;
   scaleImageWidth: number = 0;
@@ -113,7 +125,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     return Taro.getImageInfo({
       src: src
     })
-      .then((res: getImageInfo.SuccessCallbackResult) => {
+      .then((res:getImageInfoType['SuccessCallbackResult']) => {
         this.imageInfo = res;
         const imageWidth = res.width;
         const imageHeight = res.height;
@@ -188,9 +200,9 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
    */
   _drawCropperCorner() {
     const {
-      themeColor
+      themeColor,isSideLine
     } = this.props;
-
+    if(!isSideLine) return ;
     const lineWidth = 2;
     const lineLength = 10;
     const cropperStartX = (this.width - this.cropperWidth) / 2;
@@ -244,6 +256,7 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
     imageHeight: number,
     drawWidth: number,
     drawHeight: number) {
+    const { type,maskColor } = this.props
     this._drawCropperCorner();
     const cropperStartX = (this.width - this.cropperWidth) / 2;
     const cropperStartY = (this.height - this.cropperHeight) / 2;
@@ -264,9 +277,19 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       // @ts-ignore
       this.cropperCutCanvasContext.drawImage(src, cropperImageX, cropperImageY, cropperImageWidth, cropperImageHeight, 0, 0, this.cropperWidth, this.cropperHeight);
     }
+    if(type=='circle'){
+      // 绘制半透明层 圆形
+      this.cropperCanvasContext.beginPath();
+      var lineWidth = 300;
+      this.cropperCanvasContext.lineWidth = lineWidth;
+      this.cropperCanvasContext.strokeStyle = maskColor as string
+      this.cropperCanvasContext.arc(cropperStartX+this.cropperWidth/2,cropperStartY+this.cropperHeight/2,this.cropperWidth/2+lineWidth/2,0,2*Math.PI);
+      this.cropperCanvasContext.stroke();
+    }
   }
 
   update() {
+    const { type,maskColor } = this.props
     if (!this.imageInfo) {            // 图片资源无效则不执行更新操作
       this._drawCropperCorner();
       this.cropperCanvasContext.draw();
@@ -282,11 +305,14 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       // @ts-ignore
       this.cropperCanvasContext.drawImage(src, 0, 0, this.imageInfo.width, this.imageInfo.height, this.imageLeft, this.imageTop, this.scaleImageWidth, this.scaleImageHeight);
     }
-    // 绘制半透明层
-    this.cropperCanvasContext.beginPath();
-    easySetFillStyle(this.systemInfo, this.cropperCanvasContext, 'rgba(0, 0, 0, 0.3)');
-    this.cropperCanvasContext.fillRect(0, 0, this.width, this.height);
-    this.cropperCanvasContext.fill();
+
+    if(type=='rect'){
+      // 绘制半透明层 矩形
+      this.cropperCanvasContext.beginPath();
+      easySetFillStyle(this.systemInfo, this.cropperCanvasContext, maskColor as string  );
+      this.cropperCanvasContext.fillRect(0, 0, this.width, this.height);
+      this.cropperCanvasContext.fill();
+    }
 
     // 绘制裁剪框内部的区域
     this._drawCropperContent(src, this.imageLeft, this.imageTop,
