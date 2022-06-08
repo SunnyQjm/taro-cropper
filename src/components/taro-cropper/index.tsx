@@ -281,8 +281,8 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
       // 绘制半透明层 圆形
       this.cropperCanvasContext.beginPath();
       var lineWidth = 300;
-      this.cropperCanvasContext.lineWidth = lineWidth;
-      this.cropperCanvasContext.strokeStyle = maskColor as string
+      this.cropperCanvasContext.setLineWidth(lineWidth)
+      this.cropperCanvasContext.setStrokeStyle(maskColor as string)
       this.cropperCanvasContext.arc(cropperStartX+this.cropperWidth/2,cropperStartY+this.cropperHeight/2,this.cropperWidth/2+lineWidth/2,0,2*Math.PI);
       this.cropperCanvasContext.stroke();
     }

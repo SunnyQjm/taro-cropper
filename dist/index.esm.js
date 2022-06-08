@@ -296,8 +296,8 @@ var TaroCropperComponent = /** @class */ (function (_super) {
             // 绘制半透明层 圆形
             this.cropperCanvasContext.beginPath();
             var lineWidth = 300;
-            this.cropperCanvasContext.lineWidth = lineWidth;
-            this.cropperCanvasContext.strokeStyle = maskColor;
+            this.cropperCanvasContext.setLineWidth(lineWidth);
+            this.cropperCanvasContext.setStrokeStyle(maskColor);
             this.cropperCanvasContext.arc(cropperStartX + this.cropperWidth / 2, cropperStartY + this.cropperHeight / 2, this.cropperWidth / 2 + lineWidth / 2, 0, 2 * Math.PI);
             this.cropperCanvasContext.stroke();
         }
