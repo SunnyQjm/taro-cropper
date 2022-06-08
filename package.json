@@ -12,7 +12,8 @@
     "typescript": true,
     "css": "sass"
   },
-  "types": "types/index.d.ts",
+  "typings": "types/index.d.ts",
+  "types": "module",
   "files": [
     "lib",
     "dist",
