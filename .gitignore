@@ -1,6 +1,5 @@
 node_modules/
 yarn-error.log
 lib/
-types/
 .DS_Store
 README.md
