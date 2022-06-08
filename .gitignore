@@ -2,4 +2,3 @@ node_modules/
 yarn-error.log
 lib/
 .DS_Store
-README.md
