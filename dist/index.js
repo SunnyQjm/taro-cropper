@@ -531,13 +531,7 @@ var TaroCropperComponent = /** @class */ (function (_super) {
         // const isH5 = process.env.TARO_ENV === 'h5';
         if (!hideFinishText) {
             var finishStyle = {
-                position: 'absolute',
-                display: 'inline-block',
                 color: themeColor,
-                textAlign: "right",
-                fontSize: Taro__default["default"].pxTransform(32, 750),
-                bottom: Taro__default["default"].pxTransform(30, 750),
-                right: Taro__default["default"].pxTransform(30, 750),
             };
             var onFinishClick = function () {
                 _this.cut()
@@ -549,7 +543,7 @@ var TaroCropperComponent = /** @class */ (function (_super) {
                 });
             };
             // if (!isH5) {
-            finish = React__default["default"].createElement(components.CoverView, { style: finishStyle, onClick: onFinishClick }, finishText);
+            finish = React__default["default"].createElement(components.CoverView, { className: 'ctaro-cropper__confirm-btn', style: finishStyle, onClick: onFinishClick }, finishText);
             // } else {
             //   finish = <View
             //     style={finishStyle}
@@ -561,15 +555,9 @@ var TaroCropperComponent = /** @class */ (function (_super) {
         }
         if (!hideCancelText) {
             var cancelStyle = {
-                position: 'absolute',
-                display: 'inline-block',
                 color: themeColor,
-                textAlign: "left",
-                fontSize: Taro__default["default"].pxTransform(32, 750),
-                bottom: Taro__default["default"].pxTransform(30, 750),
-                left: Taro__default["default"].pxTransform(30, 750),
             };
-            cancel = React__default["default"].createElement(components.CoverView, { style: cancelStyle, onClick: onCancel }, cancelText);
+            cancel = React__default["default"].createElement(components.CoverView, { className: 'ctaro-cropper__cancel-btn', style: cancelStyle, onClick: onCancel }, cancelText);
         }
         return (React__default["default"].createElement(components.View, { className: "taro-cropper " + (isFullScreenCss ? 'taro-cropper-fullscreen' : ''), style: cropperStyle },
             React__default["default"].createElement(components.Canvas, { canvasId: cropperCutCanvasId, style: cutCanvasStyle, className: "cut-canvas-item " + (isFullScreenCss ? 'cut-canvas-fullscreen' : '') }),

@@ -9,6 +9,22 @@
 .cut-canvas-item {
   position: absolute;
 }
+.ctaro-cropper__confirm-btn {
+  position: absolute !important;
+  display: inline-block !important;
+  text-align:right !important;
+  font-size: 32px !important;
+  bottom: 50px !important;
+  right: 30px !important;
+}
+.ctaro-cropper__cancel-btn {
+  position: absolute !important;
+  display: inline-block !important;
+  text-align:left !important;
+  font-size: 32px !important;
+  bottom: 50px !important;
+  left: 30px !important;
+}
 .taro-cropper {
   position: relative;
 }
