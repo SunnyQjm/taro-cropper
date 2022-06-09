@@ -638,14 +638,18 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
           disableScroll
         >
           {
-            !hideFinishText &&
-            finish
-          }
-          {
-            !hideCancelText &&
-            cancel
+           (process.env.TARO_ENV == 'swan')&&(
+              (!hideFinishText && finish)
+              (!hideCancelText && cancel)
+           )
           }
         </Canvas>
+        {
+          (process.env.TARO_ENV != 'swan')&&(
+            (!hideFinishText && finish)
+            (!hideCancelText && cancel)
+          )
+        }
       </View>
 
     );
