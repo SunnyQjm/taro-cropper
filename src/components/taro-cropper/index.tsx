@@ -637,15 +637,15 @@ class TaroCropperComponent extends PureComponent<TaroCropperComponentProps, Taro
           className={`canvas-item ${isFullScreenCss ? 'canvas-fullscreen' : ''}`}
           disableScroll
         >
+          {
+            !hideFinishText &&
+            finish
+          }
+          {
+            !hideCancelText &&
+            cancel
+          }
         </Canvas>
-        {
-          !hideFinishText &&
-          finish
-        }
-        {
-          !hideCancelText &&
-          cancel
-        }
       </View>
 
     );
