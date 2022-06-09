@@ -554,8 +554,11 @@ var TaroCropperComponent = /** @class */ (function (_super) {
         }
         return (React.createElement(View, { className: "taro-cropper " + (isFullScreenCss ? 'taro-cropper-fullscreen' : ''), style: cropperStyle },
             React.createElement(Canvas, { canvasId: cropperCutCanvasId, style: cutCanvasStyle, className: "cut-canvas-item " + (isFullScreenCss ? 'cut-canvas-fullscreen' : '') }),
-            React.createElement(Canvas, { onTouchStart: this.handleOnTouchStart, onTouchMove: this.handleOnTouchMove, onTouchEnd: this.handleOnTouchEnd, canvasId: cropperCanvasId, style: canvasStyle, className: "canvas-item " + (isFullScreenCss ? 'canvas-fullscreen' : ''), disableScroll: true }, (process.env.TARO_ENV == 'swan') && ((!hideFinishText && finish)(!hideCancelText && cancel))),
-            (process.env.TARO_ENV != 'swan') && ((!hideFinishText && finish)(!hideCancelText && cancel))));
+            React.createElement(Canvas, { onTouchStart: this.handleOnTouchStart, onTouchMove: this.handleOnTouchMove, onTouchEnd: this.handleOnTouchEnd, canvasId: cropperCanvasId, style: canvasStyle, className: "canvas-item " + (isFullScreenCss ? 'canvas-fullscreen' : ''), disableScroll: true },
+                (process.env.TARO_ENV != 'swan' && !hideFinishText) && (finish),
+                (process.env.TARO_ENV != 'swan' && !hideCancelText) && (cancel)),
+            (process.env.TARO_ENV != 'swan' && !hideFinishText) && (finish),
+            (process.env.TARO_ENV != 'swan' && !hideCancelText) && (cancel)));
     };
     TaroCropperComponent.defaultProps = {
         type: 'rect',
